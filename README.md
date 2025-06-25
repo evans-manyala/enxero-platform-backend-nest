@@ -1,98 +1,136 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Enxero Platform Backend (NestJS)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A robust backend service for the Enxero Platform built with NestJS, TypeScript, and PostgreSQL.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 Features
 
-## Description
+- **Authentication & Authorization**
+  - JWT-based authentication
+  - Role-based access control (RBAC)
+  - Refresh token mechanism for secure session management
+  - Password hashing and history tracking
+  - Account status management (active, suspended, deactivated)
+  - Password reset via email
+  - Email verification
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **User Management**
+  - User profile management (CRUD)
+  - Password history
+  - Advanced user listing, filtering, and sorting
+  - Account status updates
 
-## Project setup
+- **Role, Company, Employee, Payroll, Leave, Forms, File, Notification, Audit, Integration, System Management**
+  - All core modules from the ExpressJS version, now in a modular NestJS structure
 
-```bash
-$ npm install
+## 🛠 Tech Stack
+
+- **Runtime:** Node.js
+- **Language:** TypeScript
+- **Framework:** NestJS
+- **Database:** PostgreSQL
+- **ORM:** Prisma
+- **Authentication:** JWT
+- **Validation:** class-validator
+- **Testing:** Jest
+- **Documentation:** Swagger (OpenAPI)
+
+## 📁 Project Structure
+
+```
+enxero-platform-backend-nest/
+├── README.md
+├── prisma/
+│   ├── migrations/            # Database migrations
+│   ├── schema.prisma          # Database schema
+│   └── seed.ts                # Database seeding
+├── src/
+│   ├── app.module.ts          # Root NestJS module
+│   ├── main.ts                # Entry point
+│   ├── prisma/                # Prisma service
+│   ├── auth/                  # Auth module (controllers, services, DTOs)
+│   ├── users/                 # User management
+│   └── mailer.service.ts      # Simple mailer service (replace for production)
+├── test/                      # Automated tests
+├── package.json
+├── tsconfig.json
+└── ...
 ```
 
-## Compile and run the project
+## 🚀 Getting Started
 
-```bash
-# development
-$ npm run start
+### Prerequisites
 
-# watch mode
-$ npm run start:dev
+- Node.js (v18 or higher)
+- PostgreSQL (v14 or higher)
+- npm or yarn
 
-# production mode
-$ npm run start:prod
-```
+### Installation
 
-## Run tests
+1. **Clone the repository:**
 
-```bash
-# unit tests
-$ npm run test
+   ```bash
+   git clone https://github.com/evans-manyala/enxero-platform-backend-nest.git
+   cd enxero-platform-backend-nest
+   ```
 
-# e2e tests
-$ npm run test:e2e
+2. **Install dependencies:**
 
-# test coverage
-$ npm run test:cov
-```
+   ```bash
+   npm install
+   ```
 
-## Deployment
+3. **Set up environment variables:**
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+4. **Set up the database:**
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+   ```bash
+   npx prisma migrate deploy
+   npx prisma generate
+   npx prisma db seed
+   ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+5. **Run the application:**
 
-## Resources
+   ```bash
+   # development
+   npm run start
 
-Check out a few resources that may come in handy when working with NestJS:
+   # watch mode
+   npm run start:dev
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+   # production
+   npm run start:prod
+   ```
 
-## Support
+## 🔑 Authentication & Security
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- JWT-based authentication (access & refresh tokens)
+- Password reset and email verification flows
+- Role-based access control
+- Secure password storage (bcrypt)
 
-## Stay in touch
+## 📬 Password Reset & Email Verification
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- **Request password reset:** `POST /auth/request-password-reset` (body: `{ email }`)
+- **Reset password:** `POST /auth/reset-password` (body: `{ token, newPassword, confirmPassword }`)
+- **Request email verification:** `POST /auth/request-email-verification` (body: `{ email }`)
+- **Verify email:** `POST /auth/verify-email` (body: `{ token }`)
 
-## License
+> The mailer service is a stub. Integrate with a real provider for production use.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## 📖 API Documentation
+
+- Swagger/OpenAPI docs available at `/api` (if enabled in main.ts)
+
+## 🤝 Contributing
+
+Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
+
+## 📝 License
+
+[MIT](LICENSE)
