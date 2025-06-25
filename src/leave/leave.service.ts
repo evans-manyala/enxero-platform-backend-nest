@@ -10,8 +10,9 @@ export class LeaveService {
   constructor(private prisma: PrismaService) {}
 
   // LeaveRequest CRUD
-  async createLeaveRequest(data: CreateLeaveRequestDto) {
-    return this.prisma.leaveRequest.create({ data });
+  async createLeaveRequest(dto: CreateLeaveRequestDto) {
+    const { id, ...rest } = dto as any;
+    return this.prisma.leaveRequest.create({ data: rest });
   }
 
   async findAllLeaveRequests() {
@@ -31,8 +32,9 @@ export class LeaveService {
   }
 
   // LeaveType CRUD
-  async createLeaveType(data: CreateLeaveTypeDto) {
-    return this.prisma.leaveType.create({ data });
+  async createLeaveType(dto: CreateLeaveTypeDto) {
+    const { id, ...rest } = dto as any;
+    return this.prisma.leaveType.create({ data: rest });
   }
 
   async findAllLeaveTypes() {

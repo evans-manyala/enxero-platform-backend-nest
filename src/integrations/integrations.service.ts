@@ -10,8 +10,9 @@ export class IntegrationsService {
   constructor(private prisma: PrismaService) {}
 
   // Integration CRUD
-  async createIntegration(data: CreateIntegrationDto) {
-    return this.prisma.integration.create({ data });
+  async createIntegration(dto: CreateIntegrationDto) {
+    const { id, ...rest } = dto as any;
+    return this.prisma.integration.create({ data: rest });
   }
 
   async findAllIntegrations() {
@@ -31,8 +32,9 @@ export class IntegrationsService {
   }
 
   // IntegrationLog CRUD
-  async createIntegrationLog(data: CreateIntegrationLogDto) {
-    return this.prisma.integrationLog.create({ data });
+  async createIntegrationLog(dto: CreateIntegrationLogDto) {
+    const { id, ...rest } = dto as any;
+    return this.prisma.integrationLog.create({ data: rest });
   }
 
   async findAllIntegrationLogs() {

@@ -50,4 +50,14 @@ export class SystemService {
   async removeLog(id: string) {
     return this.prisma.systemLog.delete({ where: { id } });
   }
+
+  async createSystemConfig(dto: CreateSystemConfigDto) {
+    const { id, ...rest } = dto as any;
+    return this.prisma.systemConfig.create({ data: rest });
+  }
+
+  async createSystemLog(dto: CreateSystemLogDto) {
+    const { id, ...rest } = dto as any;
+    return this.prisma.systemLog.create({ data: rest });
+  }
 } 

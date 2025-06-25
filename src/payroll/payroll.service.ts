@@ -7,8 +7,9 @@ import { UpdatePayrollRecordDto } from './dto/update-payroll-record.dto';
 export class PayrollService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: CreatePayrollRecordDto) {
-    return this.prisma.payrollRecord.create({ data });
+  async create(dto: CreatePayrollRecordDto) {
+    const { id, ...rest } = dto as any;
+    return this.prisma.payrollRecord.create({ data: rest });
   }
 
   async findAll() {

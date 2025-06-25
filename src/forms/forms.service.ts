@@ -2,28 +2,30 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateFormDto } from './dto/create-form.dto';
 import { UpdateFormDto } from './dto/update-form.dto';
+import { forms } from '@prisma/client';
 
 @Injectable()
 export class FormsService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: CreateFormDto) {
-    return this.prisma.forms.create({ data });
+  async create(dto: CreateFormDto): Promise<forms> {
+    const { id, updatedAt, ...rest } = dto as any;
+    return await this.prisma.forms.create({ data: rest });
   }
 
-  async findAll() {
-    return this.prisma.forms.findMany();
+  async findAll(): Promise<forms[]> {
+    return await this.prisma.forms.findMany();
   }
 
-  async findOne(id: string) {
-    return this.prisma.forms.findUnique({ where: { id } });
+  async findOne(id: string): Promise<forms | null> {
+    return await this.prisma.forms.findUnique({ where: { id } });
   }
 
-  async update(id: string, data: UpdateFormDto) {
-    return this.prisma.forms.update({ where: { id }, data });
+  async update(id: string, data: UpdateFormDto): Promise<forms> {
+    return await this.prisma.forms.update({ where: { id }, data });
   }
 
-  async remove(id: string) {
-    return this.prisma.forms.delete({ where: { id } });
+  async remove(id: string): Promise<forms> {
+    return await this.prisma.forms.delete({ where: { id } });
   }
 } 

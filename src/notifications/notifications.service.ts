@@ -7,8 +7,9 @@ import { UpdateNotificationDto } from './dto/update-notification.dto';
 export class NotificationsService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: CreateNotificationDto) {
-    return this.prisma.notifications.create({ data });
+  async create(dto: CreateNotificationDto) {
+    const { id, ...rest } = dto as any;
+    return this.prisma.notifications.create({ data: rest });
   }
 
   async findAll() {

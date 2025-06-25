@@ -7,8 +7,9 @@ import { UpdateFileDto } from './dto/update-file.dto';
 export class FilesService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: CreateFileDto) {
-    return this.prisma.files.create({ data });
+  async create(dto: CreateFileDto) {
+    const { id, ...rest } = dto as any;
+    return this.prisma.files.create({ data: rest });
   }
 
   async findAll() {

@@ -7,8 +7,9 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 export class RolesService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: CreateRoleDto) {
-    return this.prisma.role.create({ data });
+  async create(dto: CreateRoleDto) {
+    const { id, ...rest } = dto as any;
+    return this.prisma.role.create({ data: rest });
   }
 
   async findAll() {

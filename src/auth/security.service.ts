@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { UserSession, UserActivity } from '@prisma/client';
+import { User, UserSession, UserActivity } from '@prisma/client';
 
 @Injectable()
 export class SecurityService {
@@ -15,7 +15,6 @@ export class SecurityService {
     ipAddress?: string,
     userAgent?: string,
   ): Promise<void> {
-    // @ts-expect-error Prisma type inference
     const user = await this.prisma.user.findUnique({ where: { email } });
     if (user) {
       await this.prisma.failedLoginAttempt.create({
@@ -71,9 +70,7 @@ export class SecurityService {
     ipAddress?: string,
     userAgent?: string,
   ): Promise<UserSession> {
-    // @ts-expect-error Prisma type inference
     await this.prisma.userSession.deleteMany({ where: { token } });
-    // @ts-expect-error Prisma type inference
     return this.prisma.userSession.create({
       data: {
         userId,
@@ -106,14 +103,12 @@ export class SecurityService {
     ipAddress?: string,
     userAgent?: string
   ): Promise<UserActivity> {
-    // @ts-expect-error Prisma type inference
     return this.prisma.userActivity.create({
       data: { userId, action, metadata, ipAddress, userAgent },
     });
   }
 
   getUserActivities(userId: string, limit = 50, offset = 0): Promise<UserActivity[]> {
-    // @ts-expect-error Prisma type inference
     return this.prisma.userActivity.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
@@ -129,6 +124,26 @@ export class SecurityService {
       where: {
         createdAt: { lt: new Date(now.getTime() - 24 * 60 * 60 * 1000) },
       },
+    });
+  }
+
+  async findUserByEmail(email: string): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    return user;
+  }
+
+  async createUserSession(data: { userId: string; token: string; ipAddress?: string; userAgent?: string }): Promise<UserSession> {
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days from now
+    return this.prisma.userSession.create({ data: { ...data, expiresAt } });
+  }
+
+  async deleteUserSessionsByToken(token: string): Promise<void> {
+    await this.prisma.userSession.deleteMany({ where: { token } });
+  }
+
+  async createUserActivity(userId: string, action: string, metadata?: any, ipAddress?: string, userAgent?: string): Promise<UserActivity> {
+    return this.prisma.userActivity.create({
+      data: { userId, action, metadata, ipAddress, userAgent },
     });
   }
 } 

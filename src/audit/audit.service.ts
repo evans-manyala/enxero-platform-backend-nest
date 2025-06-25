@@ -7,8 +7,9 @@ import { UpdateAuditLogDto } from './dto/update-audit-log.dto';
 export class AuditService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: CreateAuditLogDto) {
-    return this.prisma.audit_logs.create({ data });
+  async create(dto: CreateAuditLogDto) {
+    const { id, ...rest } = dto as any;
+    return this.prisma.audit_logs.create({ data: rest });
   }
 
   async findAll() {

@@ -7,8 +7,9 @@ import { UpdateEmployeeDto } from './dto/update-employee.dto';
 export class EmployeesService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: CreateEmployeeDto) {
-    return this.prisma.employee.create({ data });
+  async create(dto: CreateEmployeeDto) {
+    const { id, ...rest } = dto as any;
+    return this.prisma.employee.create({ data: rest });
   }
 
   async findAll() {
