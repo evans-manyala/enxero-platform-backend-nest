@@ -1,4 +1,5 @@
 import { IsString, IsOptional, IsInt, IsBoolean } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateLeaveTypeDto {
   @IsString()
@@ -8,6 +9,7 @@ export class CreateLeaveTypeDto {
   @IsString()
   description?: string;
 
+  @Type(() => Number)
   @IsInt()
   maxDays: number;
 

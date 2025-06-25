@@ -227,6 +227,7 @@ model PayrollRecord {
   @@index([processedAt])
   @@index([payPeriodEnd])
   @@index([payPeriodStart])
+  @@unique([employeeId, payPeriodStart])
   @@map("payroll_records")
 }
 
@@ -406,6 +407,7 @@ model LeaveType {
   requests    LeaveRequest[]
   company     Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
+  @@unique([name, companyId])
   @@index([companyId])
   @@index([isActive])
   @@map("leave_types")

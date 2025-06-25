@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateLeaveRequestDto } from './dto/create-leave-request.dto';
 import { UpdateLeaveRequestDto } from './dto/update-leave-request.dto';
 import { CreateLeaveTypeDto } from './dto/create-leave-type.dto';
 import { UpdateLeaveTypeDto } from './dto/update-leave-type.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class LeaveService {
@@ -34,7 +35,14 @@ export class LeaveService {
   // LeaveType CRUD
   async createLeaveType(dto: CreateLeaveTypeDto) {
     const { id, ...rest } = dto as any;
-    return this.prisma.leaveType.create({ data: rest });
+    try {
+      return await this.prisma.leaveType.create({ data: rest });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+        throw new BadRequestException('Duplicate leave type for company');
+      }
+      throw error;
+    }
   }
 
   async findAllLeaveTypes() {

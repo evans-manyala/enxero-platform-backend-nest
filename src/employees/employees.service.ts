@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class EmployeesService {
@@ -9,7 +10,14 @@ export class EmployeesService {
 
   async create(dto: CreateEmployeeDto) {
     const { id, ...rest } = dto as any;
-    return this.prisma.employee.create({ data: rest });
+    try {
+      return await this.prisma.employee.create({ data: rest });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+        throw new BadRequestException('Employee email or employeeId must be unique');
+      }
+      throw error;
+    }
   }
 
   async findAll() {

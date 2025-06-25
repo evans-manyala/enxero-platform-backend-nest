@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class RolesService {
@@ -9,7 +10,14 @@ export class RolesService {
 
   async create(dto: CreateRoleDto) {
     const { id, ...rest } = dto as any;
-    return this.prisma.role.create({ data: rest });
+    try {
+      return await this.prisma.role.create({ data: rest });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+        throw new BadRequestException('Role name must be unique');
+      }
+      throw error;
+    }
   }
 
   async findAll() {

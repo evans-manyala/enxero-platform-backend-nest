@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePayrollRecordDto } from './dto/create-payroll-record.dto';
 import { UpdatePayrollRecordDto } from './dto/update-payroll-record.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class PayrollService {
@@ -9,7 +10,14 @@ export class PayrollService {
 
   async create(dto: CreatePayrollRecordDto) {
     const { id, ...rest } = dto as any;
-    return this.prisma.payrollRecord.create({ data: rest });
+    try {
+      return await this.prisma.payrollRecord.create({ data: rest });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+        throw new BadRequestException('Duplicate payroll record for employee and period');
+      }
+      throw error;
+    }
   }
 
   async findAll() {
