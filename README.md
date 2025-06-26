@@ -17,6 +17,9 @@ A robust, production-grade backend service for the Enxero Platform built with Ne
   - Robust error handling (NotFound, Conflict, BadRequest, relation/uniqueness errors)
 - **Comprehensive E2E Test Coverage**
   - All modules and endpoints are covered by automated E2E tests (CRUD, validation, edge cases, error handling)
+- **Automated API Documentation**
+  - Swagger UI at `/api` (non-production) with live, interactive docs for all endpoints
+  - Bearer authentication supported in Swagger
 - **Modular Architecture**
   - All core modules from the ExpressJS version, now in a modular NestJS structure
 
@@ -183,7 +186,11 @@ A robust, production-grade backend service for the Enxero Platform built with Ne
 
 ## 📖 API Documentation
 
-- Swagger/OpenAPI docs available at `/api` (if enabled in main.ts)
+- **Swagger UI:**
+  - Available at [`/api`](http://localhost:3000/api) when running in non-production environments
+  - Interactive documentation for all endpoints, including request/response schemas
+  - Bearer authentication supported for testing secured endpoints
+  - Docs are auto-generated from code and DTOs—keep them up to date by maintaining your controllers and DTOs
 
 ## 🤝 Contributing
 
