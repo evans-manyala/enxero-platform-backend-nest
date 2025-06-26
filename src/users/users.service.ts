@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -13,8 +13,10 @@ export class UsersService {
     return await this.prisma.user.findMany();
   }
 
-  async findOne(id: string): Promise<User | null> {
-    return await this.prisma.user.findUnique({ where: { id } });
+  async findOne(id: string): Promise<User> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) throw new NotFoundException('User not found');
+    return user;
   }
 
   async create(data: CreateUserDto): Promise<User> {
@@ -32,6 +34,8 @@ export class UsersService {
   }
 
   async update(id: string, data: UpdateUserDto): Promise<User> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) throw new NotFoundException('User not found');
     const updateData = { ...data };
     if (data.password) {
       updateData.password = await bcrypt.hash(data.password, 10);
@@ -43,6 +47,8 @@ export class UsersService {
   }
 
   async remove(id: string): Promise<User> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) throw new NotFoundException('User not found');
     return this.prisma.user.delete({ where: { id } });
   }
 } 

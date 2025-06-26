@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsDateString, IsOptional } from 'class-validator';
+import { IsString, IsNumber, IsDateString, IsOptional, MaxLength } from 'class-validator';
 
 export class CreatePayrollRecordDto {
   @IsDateString()
@@ -26,6 +26,7 @@ export class CreatePayrollRecordDto {
   allowances?: any;
 
   @IsString()
+  @MaxLength(100)
   status: string;
 
   @IsOptional()
@@ -33,11 +34,14 @@ export class CreatePayrollRecordDto {
   processedAt?: string;
 
   @IsString()
+  @MaxLength(50)
   employeeId: string;
 
   @IsString()
+  @MaxLength(50)
   companyId: string;
 
   @IsString()
+  @MaxLength(50)
   periodId: string;
 } 

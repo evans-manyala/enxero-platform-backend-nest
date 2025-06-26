@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsDateString, IsOptional } from 'class-validator';
+import { IsString, IsNumber, IsDateString, IsOptional, MaxLength } from 'class-validator';
 
 export class UpdatePayrollRecordDto {
   @IsOptional()
@@ -33,6 +33,7 @@ export class UpdatePayrollRecordDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(100)
   status?: string;
 
   @IsOptional()
@@ -41,13 +42,16 @@ export class UpdatePayrollRecordDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(50)
   employeeId?: string;
 
   @IsOptional()
   @IsString()
+  @MaxLength(50)
   companyId?: string;
 
   @IsOptional()
   @IsString()
+  @MaxLength(50)
   periodId?: string;
 } 

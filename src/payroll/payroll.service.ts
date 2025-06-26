@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePayrollRecordDto } from './dto/create-payroll-record.dto';
 import { UpdatePayrollRecordDto } from './dto/update-payroll-record.dto';
@@ -25,14 +25,20 @@ export class PayrollService {
   }
 
   async findOne(id: string) {
-    return this.prisma.payrollRecord.findUnique({ where: { id } });
+    const record = await this.prisma.payrollRecord.findUnique({ where: { id } });
+    if (!record) throw new NotFoundException('Payroll record not found');
+    return record;
   }
 
   async update(id: string, data: UpdatePayrollRecordDto) {
+    const record = await this.prisma.payrollRecord.findUnique({ where: { id } });
+    if (!record) throw new NotFoundException('Payroll record not found');
     return this.prisma.payrollRecord.update({ where: { id }, data });
   }
 
   async remove(id: string) {
+    const record = await this.prisma.payrollRecord.findUnique({ where: { id } });
+    if (!record) throw new NotFoundException('Payroll record not found');
     return this.prisma.payrollRecord.delete({ where: { id } });
   }
 } 

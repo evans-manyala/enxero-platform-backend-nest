@@ -141,10 +141,7 @@ describe('Payroll Module (e2e)', () => {
   it('should return 404 for not found payroll record', async () => {
     await request(app.getHttpServer())
       .get('/payroll/nonexistent-id')
-      .expect(200) // If your API returns 404, change this to 404
-      .expect(res => {
-        expect(res.body === null || JSON.stringify(res.body) === '{}').toBe(true);
-      });
+      .expect(404);
   });
 
   it('should update a payroll record', async () => {
@@ -162,10 +159,56 @@ describe('Payroll Module (e2e)', () => {
     // Confirm deletion
     await request(app.getHttpServer())
       .get(`/payroll/${createdPayrollId}`)
-      .expect(200)
-      .expect(res => {
-        expect(res.body === null || JSON.stringify(res.body) === '{}').toBe(true);
-      });
+      .expect(404);
     createdPayrollId = undefined;
+  });
+
+  it('should fail to create a payroll record with too-long fields', async () => {
+    const payload = {
+      ...basePayroll,
+      status: 'a'.repeat(256),
+      employeeId: 'b'.repeat(256),
+      companyId: 'c'.repeat(256),
+      periodId: 'd'.repeat(256),
+    };
+    const res = await request(app.getHttpServer())
+      .post('/payroll')
+      .send(payload);
+    expect(res.status).toBe(400);
+    expect(res.body.message).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('status'),
+        expect.stringContaining('employeeId'),
+        expect.stringContaining('companyId'),
+        expect.stringContaining('periodId'),
+      ])
+    );
+  });
+
+  it('should fail to create a payroll record with extra/unknown fields', async () => {
+    const payload = { ...basePayroll, extraField: 'not allowed' };
+    const res = await request(app.getHttpServer())
+      .post('/payroll')
+      .send(payload);
+    expect(res.status).toBe(400);
+    expect(res.body.message).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('property extraField should not exist'),
+      ])
+    );
+  });
+
+  it('should fail to create a payroll record with invalid types', async () => {
+    const payload = { ...basePayroll, grossSalary: 'not-a-number', payPeriodStart: 12345 };
+    const res = await request(app.getHttpServer())
+      .post('/payroll')
+      .send(payload);
+    expect(res.status).toBe(400);
+    expect(res.body.message).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('grossSalary'),
+        expect.stringContaining('payPeriodStart'),
+      ])
+    );
   });
 }); 

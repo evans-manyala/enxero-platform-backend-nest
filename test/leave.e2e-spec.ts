@@ -158,6 +158,53 @@ describe('Leave Module (e2e)', () => {
     expect(res.body.description).toBe('Updated description');
   });
 
+  it('should fail to create a leave type with too-long fields', async () => {
+    const payload = {
+      name: 'a'.repeat(101),
+      description: 'b'.repeat(501),
+      maxDays: 30,
+      isActive: true,
+      companyId: 'c'.repeat(51),
+    };
+    const res = await request(app.getHttpServer())
+      .post('/leave/types')
+      .send(payload);
+    expect(res.status).toBe(400);
+    expect(res.body.message).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('name'),
+        expect.stringContaining('description'),
+        expect.stringContaining('companyId'),
+      ])
+    );
+  });
+
+  it('should fail to create a leave type with extra/unknown fields', async () => {
+    const payload = { ...baseLeaveType, companyId, extraField: 'not allowed' };
+    const res = await request(app.getHttpServer())
+      .post('/leave/types')
+      .send(payload);
+    expect(res.status).toBe(400);
+    expect(res.body.message).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('property extraField should not exist'),
+      ])
+    );
+  });
+
+  it('should fail to create a leave type with invalid types', async () => {
+    const payload = { ...baseLeaveType, companyId, maxDays: 'not-a-number' };
+    const res = await request(app.getHttpServer())
+      .post('/leave/types')
+      .send(payload);
+    expect(res.status).toBe(400);
+    expect(res.body.message).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('maxDays'),
+      ])
+    );
+  });
+
   // --- Leave Request CRUD ---
   it('should create a leave request', async () => {
     const res = await request(app.getHttpServer())
@@ -213,5 +260,62 @@ describe('Leave Module (e2e)', () => {
         expect(res.body === null || JSON.stringify(res.body) === '{}').toBe(true);
       });
     leaveRequestId = undefined;
+  });
+
+  it('should fail to create a leave request with too-long fields', async () => {
+    const payload = {
+      ...baseLeaveRequest,
+      status: 'a'.repeat(101),
+      notes: 'b'.repeat(501),
+      approvalNotes: 'c'.repeat(501),
+      rejectionNotes: 'd'.repeat(501),
+      employeeId: 'e'.repeat(51),
+      typeId: 'f'.repeat(51),
+      companyId: 'g'.repeat(51),
+      approverId: 'h'.repeat(51),
+    };
+    const res = await request(app.getHttpServer())
+      .post('/leave/requests')
+      .send(payload);
+    expect(res.status).toBe(400);
+    expect(res.body.message).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('status'),
+        expect.stringContaining('notes'),
+        expect.stringContaining('approvalNotes'),
+        expect.stringContaining('rejectionNotes'),
+        expect.stringContaining('employeeId'),
+        expect.stringContaining('typeId'),
+        expect.stringContaining('companyId'),
+        expect.stringContaining('approverId'),
+      ])
+    );
+  });
+
+  it('should fail to create a leave request with extra/unknown fields', async () => {
+    const payload = { ...baseLeaveRequest, extraField: 'not allowed' };
+    const res = await request(app.getHttpServer())
+      .post('/leave/requests')
+      .send(payload);
+    expect(res.status).toBe(400);
+    expect(res.body.message).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('property extraField should not exist'),
+      ])
+    );
+  });
+
+  it('should fail to create a leave request with invalid types', async () => {
+    const payload = { ...baseLeaveRequest, status: 123, startDate: 456 };
+    const res = await request(app.getHttpServer())
+      .post('/leave/requests')
+      .send(payload);
+    expect(res.status).toBe(400);
+    expect(res.body.message).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('status'),
+        expect.stringContaining('startDate'),
+      ])
+    );
   });
 }); 

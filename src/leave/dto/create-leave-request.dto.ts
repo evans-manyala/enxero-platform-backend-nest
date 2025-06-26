@@ -1,4 +1,4 @@
-import { IsString, IsDateString, IsOptional } from 'class-validator';
+import { IsString, IsDateString, IsOptional, MaxLength } from 'class-validator';
 
 export class CreateLeaveRequestDto {
   @IsDateString()
@@ -8,18 +8,22 @@ export class CreateLeaveRequestDto {
   endDate: string;
 
   @IsString()
+  @MaxLength(100)
   status: string;
 
   @IsOptional()
   @IsString()
+  @MaxLength(500)
   notes?: string;
 
   @IsOptional()
   @IsString()
+  @MaxLength(500)
   approvalNotes?: string;
 
   @IsOptional()
   @IsString()
+  @MaxLength(500)
   rejectionNotes?: string;
 
   @IsOptional()
@@ -31,15 +35,19 @@ export class CreateLeaveRequestDto {
   rejectedAt?: string;
 
   @IsString()
+  @MaxLength(50)
   employeeId: string;
 
   @IsString()
+  @MaxLength(50)
   typeId: string;
 
   @IsString()
+  @MaxLength(50)
   companyId: string;
 
   @IsOptional()
   @IsString()
+  @MaxLength(50)
   approverId?: string;
 } 
