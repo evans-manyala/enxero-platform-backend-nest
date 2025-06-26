@@ -1,6 +1,6 @@
 # Enxero Platform Backend (NestJS)
 
-A robust backend service for the Enxero Platform built with NestJS, TypeScript, and PostgreSQL.
+A robust, production-grade backend service for the Enxero Platform built with NestJS, TypeScript, and PostgreSQL.
 
 ## 🚀 Features
 
@@ -12,15 +12,29 @@ A robust backend service for the Enxero Platform built with NestJS, TypeScript, 
   - Account status management (active, suspended, deactivated)
   - Password reset via email
   - Email verification
-
-- **User Management**
-  - User profile management (CRUD)
-  - Password history
-  - Advanced user listing, filtering, and sorting
-  - Account status updates
-
-- **Role, Company, Employee, Payroll, Leave, Forms, File, Notification, Audit, Integration, System Management**
+- **Strict Validation & Error Handling**
+  - All endpoints use strict DTO validation (type, length, object, array, required/optional)
+  - Robust error handling (NotFound, Conflict, BadRequest, relation/uniqueness errors)
+- **Comprehensive E2E Test Coverage**
+  - All modules and endpoints are covered by automated E2E tests (CRUD, validation, edge cases, error handling)
+- **Modular Architecture**
   - All core modules from the ExpressJS version, now in a modular NestJS structure
+
+## 📦 Modules
+
+- **Auth:** JWT, RBAC, password reset, email verification, strict validation, E2E tested
+- **Roles:** Role CRUD, permissions, strict validation, E2E tested
+- **Companies:** Company CRUD, strict validation, E2E tested
+- **Users:** User CRUD, profile, strict validation, E2E tested
+- **Employees:** Employee CRUD, object fields, strict validation, E2E tested
+- **Forms:** Dynamic forms, strict validation, E2E tested
+- **Payroll:** Payroll records, strict validation, E2E tested
+- **Leave:** Leave requests/types, strict validation, E2E tested
+- **Notifications:** Notification CRUD, strict validation, E2E tested
+- **Files:** File CRUD, strict validation, E2E tested
+- **Integrations:** Integration CRUD/logs, strict validation, E2E tested
+- **Audit:** Audit logs, strict validation, E2E tested
+- **System:** System config/logs, strict validation, E2E tested
 
 ## 🛠 Tech Stack
 
@@ -31,30 +45,57 @@ A robust backend service for the Enxero Platform built with NestJS, TypeScript, 
 - **ORM:** Prisma
 - **Authentication:** JWT
 - **Validation:** class-validator
-- **Testing:** Jest
+- **Testing:** Jest (unit & E2E)
 - **Documentation:** Swagger (OpenAPI)
 
 ## 📁 Project Structure
 
 ```
-enxero-platform-backend-nest/
-├── README.md
-├── prisma/
-│   ├── migrations/            # Database migrations
-│   ├── schema.prisma          # Database schema
-│   └── seed.ts                # Database seeding
-├── src/
-│   ├── app.module.ts          # Root NestJS module
-│   ├── main.ts                # Entry point
-│   ├── prisma/                # Prisma service
-│   ├── auth/                  # Auth module (controllers, services, DTOs)
-│   ├── users/                 # User management
-│   └── mailer.service.ts      # Simple mailer service (replace for production)
-├── test/                      # Automated tests
-├── package.json
-├── tsconfig.json
-└── ...
+.                                  # Project root
+├── README.md                      # Project documentation
+├── db-backup-before-reset.sql     # Database backup (manual)
+├── dist                           # Compiled output (ignored in dev)
+│   └── ...                        # Compiled JS files
+├── eslint.config.mjs              # ESLint configuration
+├── nest-cli.json                  # NestJS CLI config
+├── package-lock.json              # NPM lockfile
+├── package.json                   # Project dependencies and scripts
+├── prisma                         # Prisma ORM config and migrations
+│   ├── migrations                 # Database migration scripts
+│   ├── migrations-backup          # Backup of previous migrations
+│   ├── schema.prisma              # Prisma schema (DB models)
+│   └── seed.ts                    # Database seeding script
+├── src                            # Application source code
+│   ├── app.controller.ts          # Root controller
+│   ├── app.module.ts              # Root NestJS module
+│   ├── app.service.ts             # Root service
+│   ├── main.ts                    # Application entry point
+│   ├── prisma/                    # Prisma service provider
+│   ├── audit/                     # Audit logs module
+│   ├── auth/                      # Authentication & security module
+│   ├── companies/                 # Company management module
+│   ├── employees/                 # Employee management module
+│   ├── files/                     # File upload/storage module
+│   ├── forms/                     # Dynamic forms module
+│   ├── integrations/              # Integrations & logs module
+│   ├── leave/                     # Leave management module
+│   ├── notifications/             # Notifications module
+│   ├── payroll/                   # Payroll management module
+│   ├── roles/                     # Role/permission management module
+│   ├── system/                    # System config/logs module
+│   ├── users/                     # User management module
+│   └── mailer.service.ts          # Email/mailer service (stub)
+├── test                           # Automated E2E and unit tests
+│   ├── *.e2e-spec.ts              # E2E test files for each module
+│   └── jest-e2e.json              # Jest E2E config
+├── tsconfig.build.json            # TypeScript build config
+└── tsconfig.json                  # TypeScript project config
 ```
+
+- Each module directory (e.g., `auth/`, `users/`, `companies/`) contains its own controllers, services, DTOs, and module definition for clear separation of concerns.
+- The `test/` directory contains E2E tests for every major module, ensuring full coverage and robustness.
+- The `prisma/` directory manages all database schema, migrations, and seeding.
+- The `dist/` directory is generated after building the project and should not be edited directly.
 
 ## 🚀 Getting Started
 
@@ -106,6 +147,23 @@ enxero-platform-backend-nest/
    # production
    npm run start:prod
    ```
+
+## 🧪 Testing
+
+- All modules are covered by comprehensive E2E tests (CRUD, validation, edge cases, error handling).
+- To run all E2E tests:
+
+  ```bash
+  npm run test:e2e
+  # or
+  npx jest --config test/jest-e2e.json --runInBand --detectOpenHandles
+  ```
+
+- E2E tests cover:
+  - All CRUD operations for every module
+  - Validation errors (missing, too-long, invalid types, extra fields)
+  - Not found, duplicate, and relation errors
+  - Edge cases for all DTOs and business logic
 
 ## 🔑 Authentication & Security
 

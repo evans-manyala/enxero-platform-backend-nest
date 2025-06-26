@@ -1,36 +1,50 @@
-import { IsString, IsOptional, IsNumber, IsDateString } from 'class-validator';
+import { IsString, IsOptional, IsNumber, IsDateString, MaxLength, MinLength, IsEmail, IsObject } from 'class-validator';
 
 export class UpdateEmployeeDto {
   @IsOptional()
   @IsString()
+  @MinLength(1)
+  @MaxLength(50)
   employeeId?: string;
 
   @IsOptional()
   @IsString()
+  @MinLength(1)
+  @MaxLength(100)
   firstName?: string;
 
   @IsOptional()
   @IsString()
+  @MinLength(1)
+  @MaxLength(100)
   lastName?: string;
 
   @IsOptional()
-  @IsString()
+  @IsEmail()
+  @MaxLength(255)
   email?: string;
 
   @IsOptional()
   @IsString()
+  @MaxLength(20)
   phoneNumber?: string;
 
   @IsOptional()
   @IsString()
+  @MinLength(1)
+  @MaxLength(100)
   department?: string;
 
   @IsOptional()
   @IsString()
+  @MinLength(1)
+  @MaxLength(100)
   position?: string;
 
   @IsOptional()
   @IsString()
+  @MinLength(1)
+  @MaxLength(50)
   status?: string;
 
   @IsOptional()
@@ -46,19 +60,24 @@ export class UpdateEmployeeDto {
   salary?: number;
 
   @IsOptional()
-  emergencyContact?: any;
+  @IsObject()
+  emergencyContact?: object;
 
   @IsOptional()
-  address?: any;
+  @IsObject()
+  address?: object;
 
   @IsOptional()
-  bankDetails?: any;
+  @IsObject()
+  bankDetails?: object;
 
   @IsOptional()
-  taxInfo?: any;
+  @IsObject()
+  taxInfo?: object;
 
   @IsOptional()
-  benefits?: any;
+  @IsObject()
+  benefits?: object;
 
   @IsOptional()
   @IsString()

@@ -227,6 +227,7 @@ model PayrollRecord {
   @@index([processedAt])
   @@index([payPeriodEnd])
   @@index([payPeriodStart])
+  @@unique([employeeId, payPeriodStart])
   @@map("payroll_records")
 }
 
@@ -311,7 +312,7 @@ model form_submissions {
 }
 
 model forms {
-  id               String             @id
+  id               String             @id @default(uuid())
   title            String             @db.VarChar(255)
   description      String?
   category         String             @db.VarChar(50)
@@ -319,7 +320,7 @@ model forms {
   isTemplate       Boolean            @default(false)
   settings         Json?
   createdAt        DateTime           @default(now())
-  updatedAt        DateTime
+  updatedAt        DateTime           @updatedAt
   companyId        String
   createdBy        String
   formFields       FormField[]
@@ -406,6 +407,7 @@ model LeaveType {
   requests    LeaveRequest[]
   company     Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
+  @@unique([name, companyId])
   @@index([companyId])
   @@index([isActive])
   @@map("leave_types")

@@ -9,6 +9,34 @@ import { UpdateIntegrationLogDto } from './dto/update-integration-log.dto';
 export class IntegrationsController {
   constructor(private readonly integrationsService: IntegrationsService) {}
 
+  // IntegrationLog endpoints (move above :id route)
+  @Post('logs')
+  createIntegrationLog(@Body() dto: CreateIntegrationLogDto) {
+    return this.integrationsService.createIntegrationLog(dto);
+  }
+
+  @Get('logs')
+  findAllIntegrationLogs() {
+    const result = this.integrationsService.findAllIntegrationLogs();
+    console.log('DEBUG /integrations/logs endpoint hit, result:', result);
+    return result;
+  }
+
+  @Get('logs/:id')
+  findOneIntegrationLog(@Param('id') id: string) {
+    return this.integrationsService.findOneIntegrationLog(id);
+  }
+
+  @Put('logs/:id')
+  updateIntegrationLog(@Param('id') id: string, @Body() dto: UpdateIntegrationLogDto) {
+    return this.integrationsService.updateIntegrationLog(id, dto);
+  }
+
+  @Delete('logs/:id')
+  removeIntegrationLog(@Param('id') id: string) {
+    return this.integrationsService.removeIntegrationLog(id);
+  }
+
   // Integration endpoints
   @Post()
   createIntegration(@Body() dto: CreateIntegrationDto) {
@@ -33,31 +61,5 @@ export class IntegrationsController {
   @Delete(':id')
   removeIntegration(@Param('id') id: string) {
     return this.integrationsService.removeIntegration(id);
-  }
-
-  // IntegrationLog endpoints
-  @Post('logs')
-  createIntegrationLog(@Body() dto: CreateIntegrationLogDto) {
-    return this.integrationsService.createIntegrationLog(dto);
-  }
-
-  @Get('logs')
-  findAllIntegrationLogs() {
-    return this.integrationsService.findAllIntegrationLogs();
-  }
-
-  @Get('logs/:id')
-  findOneIntegrationLog(@Param('id') id: string) {
-    return this.integrationsService.findOneIntegrationLog(id);
-  }
-
-  @Put('logs/:id')
-  updateIntegrationLog(@Param('id') id: string, @Body() dto: UpdateIntegrationLogDto) {
-    return this.integrationsService.updateIntegrationLog(id, dto);
-  }
-
-  @Delete('logs/:id')
-  removeIntegrationLog(@Param('id') id: string) {
-    return this.integrationsService.removeIntegrationLog(id);
   }
 } 

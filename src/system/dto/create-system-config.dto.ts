@@ -1,13 +1,16 @@
-import { IsString, IsOptional, IsBoolean } from 'class-validator';
+import { IsString, IsOptional, IsBoolean, MaxLength, IsObject } from 'class-validator';
 
 export class CreateSystemConfigDto {
   @IsString()
+  @MaxLength(100)
   key: string;
 
-  value: any;
+  @IsObject()
+  value: object;
 
   @IsOptional()
   @IsString()
+  @MaxLength(255)
   description?: string;
 
   @IsOptional()
